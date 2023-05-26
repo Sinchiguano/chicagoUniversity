@@ -23,7 +23,7 @@
 # 
 # First, we will load Pandas and these datasets. Run the cells below--Do not change them, or assign different names to the dataframes! (the autograder assumes that you have run this cell as is)
 
-# In[563]:
+# In[102]:
 
 
 import pandas as pd
@@ -52,7 +52,7 @@ wdf['DATE'] = pd.to_datetime(wdf['DATE'], format='%Y/%m/%d')
 # - Find the highest maximum temperature
 # - Return the lowest temperature and the highest temperature, in that order
 
-# In[564]:
+# In[103]:
 
 
 print('testing commit')
@@ -71,7 +71,7 @@ def question_0():
     #pass
 
 
-# In[565]:
+# In[104]:
 
 
 # Run this cell as a sanity check.
@@ -91,7 +91,7 @@ assert high_temp>low_temp # Test that the high is greater than the low
 # 
 # First, we will prepare the weather data. If you look at this dataset, you will see that it gives two years of readings, and more than one reading for each day--the readings from multiple weather stations are recorded:
 
-# In[566]:
+# In[105]:
 
 
 wdf.describe() # Run this cell to see a description of the weather data
@@ -114,7 +114,7 @@ wdf.describe() # Run this cell to see a description of the weather data
 # | 32101 | 2018-01-04 | 2.0   | 13.0 |
 # | 32102 | 2018-01-05 | 0.0   | 12.0 |
 
-# In[567]:
+# In[106]:
 
 
 def question_1():
@@ -131,7 +131,7 @@ def question_1():
     return df
 
 
-# In[568]:
+# In[107]:
 
 
 # Run this cell As a sanity check
@@ -171,7 +171,7 @@ assert (answer_1["DATE"]<'2019-01-01').any()
 # | 3    | 2018-01-04 | 226 |
 # | 4    | 2018-01-05 | 221 |
 
-# In[569]:
+# In[108]:
 
 
 def question_2():
@@ -182,7 +182,7 @@ def question_2():
     return df
 
 
-# In[570]:
+# In[109]:
 
 
 # Run this cell as a sanity check
@@ -215,7 +215,7 @@ assert answer_2['count'].sum()==337756
 # | 3 | 2018-01-04 | 125567   |
 # | 4 | 2018-01-05 | 113195   |
 
-# In[571]:
+# In[110]:
 
 
 # your code here
@@ -229,7 +229,7 @@ def question_3():
     #My code did not pass the sanity check but I tested before and it works well.
 
 
-# In[572]:
+# In[111]:
 
 
 # Run this cell as a sanity check
@@ -260,7 +260,7 @@ assert(answer_3["duration"].sum())==499304198
 # | 3 | 2018-01-04 | 2.0   | 13.0 | 125567   | 226   |
 # | 4 | 2018-01-05 | 0.0   | 12.0 | 113195   | 221   |
 
-# In[573]:
+# In[112]:
 
 
 def question_4():
@@ -272,7 +272,7 @@ def question_4():
     return dfEnd
 
 
-# In[574]:
+# In[113]:
 
 
 # Run this cell as a sanity check
@@ -292,7 +292,7 @@ assert answer_4.columns.to_list()==['DATE', 'TMIN', 'TMAX', 'duration', 'count']
 # 
 # First, we will import some libraries and split into training and test sets. We'll use `scikit-learn`, and set a `random_state` for the split so that the results are reproducible.
 
-# In[575]:
+# In[114]:
 
 
 from sklearn.model_selection import train_test_split
@@ -313,7 +313,7 @@ rt_train, rt_test = train_test_split(rides_temps, test_size=0.2, random_state=83
 # 
 # - Return (1) the training set with the temperature columns normalized and (2) the test set with the temperature columns normalized.
 
-# In[576]:
+# In[115]:
 
 
 def question_5():
@@ -332,7 +332,7 @@ def question_5():
     #pass
 
 
-# In[577]:
+# In[117]:
 
 
 # Run this cell as a simple sanity check
@@ -360,16 +360,17 @@ assert test_test==rt_test["TMIN"].iloc[42]
 # - Fit a linear regression that preducts the ride count from the daily lows
 # - Return the Mean Absolute Error (MAE), Mean Squared Error (MSE) and $R^2$ as a tuple, in that order 
 
-# In[ ]:
+# In[122]:
 
 
 
+
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 def question_6():
     # your code here
-    import numpy as np
-    from sklearn import datasets, linear_model
-    from sklearn.metrics import mean_squared_error, r2_score
-    from sklearn.preprocessing import StandardScaler
     train_features=answer_5_train.drop(labels=['count','TMAX','DATE','duration'],axis=1)
     train_targets=answer_5_train.drop(labels=['TMIN','TMAX','DATE','duration'],axis=1)
     test_features=answer_5_test.drop(labels=['count','TMAX','DATE','duration'],axis=1)
@@ -382,11 +383,11 @@ def question_6():
     mse=regr.score(train_features, train_targets)
     r2=regr.score(train_features, train_targets)
     
-    return (mae,mse,r2)
+    return (mae.mean(),mse,r2)
     
 
 
-# In[ ]:
+# In[123]:
 
 
 # As a simple sanity check, verify that your answer contains three values
@@ -402,10 +403,16 @@ mae, mse, r2 = question_6()
 # - Create a linear regression using low and high temperatures to preduct ride count
 # - Return the Mean Absolute Error (MAE), Mean Squared Error (MSE) and $R^2$ as a tuple, in that order 
 
-# In[ ]:
+# In[127]:
 
 
 # your code here
+
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
+
 def question_7():
     # your code here
     train_features=answer_5_train.drop(labels=['count','DATE','duration'],axis=1)
@@ -420,10 +427,10 @@ def question_7():
     mae=np.mean((target_predict - test_targets) ** 2)
     mse=regr.score(train_features, train_targets)
     r2=regr.score(train_features, train_targets)
-    return (mae,mse,r2)
+    return (mae.mean(),mse,r2)
 
 
-# In[ ]:
+# In[128]:
 
 
 # As a simple sanity check, verify that your answer contains three values
@@ -436,7 +443,7 @@ mae, mse, r2 = question_7()
 # 
 # If you create scatterplots, you will notice that the relationship between ride duration vs. temperature looks like it could be a better fit for a polynomial function. (we'll delve more deeply into these next week)
 
-# In[ ]:
+# In[129]:
 
 
 import matplotlib.pyplot as plt
@@ -456,16 +463,16 @@ rides_temps.plot.scatter(x='TMAX',y='duration',c='DarkBlue',ax=axes[1,1])
 # - Create a linear regression using the low and the high, and the square of the low and the square of the high to predict ride duration
 # - Return the Mean Absolute Error (MAE), Mean Squared Error (MSE) and $R^2$ as a tuple, in that order
 
-# In[ ]:
+# In[130]:
 
+
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 
 def question_8():
-    # your code here
-    import numpy as np
-    from sklearn import datasets, linear_model
-    from sklearn.metrics import mean_squared_error, r2_score
-    from sklearn.preprocessing import StandardScaler
-    
+    # your code here  
     rides_temps['TMIN squared']=rides_temps['TMIN']**2
     rides_temps['TMAX squared']=rides_temps['TMAX']**2
 
@@ -481,10 +488,11 @@ def question_8():
         ridesTemp[column] = pd.DataFrame(new_column_array) # Update column.
     rt_train2, rt_test2=train_test_split(ridesTemp, test_size=0.2, random_state=8331)
 
-    train_features=answer_5_train.drop(labels=['count','DATE','duration'],axis=1)
-    train_targets=answer_5_train.drop(labels=['TMIN','TMAX','DATE','count','TMIN squared','TMAX squared'],axis=1)
-    test_features=answer_5_test.drop(labels=['count','DATE','duration'],axis=1)
-    test_targets=answer_5_test.drop(labels=['TMIN','TMAX','DATE','count','TMIN squared','TMAX squared'],axis=1)
+    train_features=rides_temps.drop(labels=['count','DATE','duration'],axis=1)
+    train_targets=rides_temps.drop(labels=['TMIN','TMAX','DATE','count','TMIN squared','TMAX squared'],axis=1)
+
+    test_features=rides_temps.drop(labels=['count','DATE','duration'],axis=1)
+    test_targets=rides_temps.drop(labels=['TMIN','TMAX','DATE','count','TMIN squared','TMAX squared'],axis=1)
 
     regr = linear_model.LinearRegression()
     regr.fit(train_features,train_targets)
@@ -493,23 +501,16 @@ def question_8():
     mae=np.mean((target_predict - test_targets) ** 2)
     mse=regr.score(train_features, train_targets)
     r2=regr.score(train_features, train_targets)
-    return (mae,mse,r2)
+    return (mae.mean(),mse,r2)
 
 
-# In[ ]:
+# In[131]:
 
 
 # As a simple sanity check, verify that your answer contains three values
 mae, mse, r2 = question_8()
 
 # For grading, the autograder will verify that your MAE, MSE, and R2 are correct
-
-
-# In[ ]:
-
-
-print(mae)
-print(mse)
 
 
 # In[ ]:
